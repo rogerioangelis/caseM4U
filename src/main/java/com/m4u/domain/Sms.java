@@ -1,20 +1,24 @@
-package domain;
+package com.m4u.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
-public class Message {
-
-	private Integer id;
+public class Sms {
+	
+	@Id
+    @GeneratedValue
+	private Long id;
 	private String sender;
 	private String destination;
 	private String body;
 
-	public Message() {
+	public Sms() {
 
 	}
 
-	public Message(Integer id, String sender, String destination, String body) {
+	public Sms(Long id, String sender, String destination, String body) {
 		super();
 		this.id = id;
 		this.sender = sender;
@@ -22,11 +26,11 @@ public class Message {
 		this.body = body;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
