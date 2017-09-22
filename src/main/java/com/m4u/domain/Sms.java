@@ -1,29 +1,44 @@
 package com.m4u.domain;
 
+import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Sms {
 	
 	@Id
-    @GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private String sender;
-	private String destination;
+	
+	@NotNull
+	@Column(name = "sender")
+	private String from;
+	
+	@NotNull
+	private String to;
+	
+	@Column(length = 160)
+	@NotNull
 	private String body;
+	
+	private Date expiration;
 
 	public Sms() {
 
 	}
 
-	public Sms(Long id, String sender, String destination, String body) {
+	public Sms(String from, String to, String body, Date expiration) {
 		super();
-		this.id = id;
-		this.sender = sender;
-		this.destination = destination;
+		this.from = from;
+		this.to = to;
 		this.body = body;
+		this.expiration = expiration;
 	}
 
 	public Long getId() {
@@ -34,28 +49,37 @@ public class Sms {
 		this.id = id;
 	}
 
-	public String getSender() {
-		return sender;
+	public String getFrom() {
+		return from;
 	}
 
-	public void setSender(String sender) {
-		this.sender = sender;
-	}
 
-	public String getDestination() {
-		return destination;
-	}
-
-	public void setDestination(String destination) {
-		this.destination = destination;
+	public String getTo() {
+		return to;
 	}
 
 	public String getBody() {
 		return body;
 	}
 
+
+	public Date getExpiration() {
+		return expiration;
+	}
+
+	public void setFrom(String from) {
+		this.from = from;
+	}
+
+	public void setTo(String to) {
+		this.to = to;
+	}
+
 	public void setBody(String body) {
 		this.body = body;
 	}
 
+	public void setExpiration(Date expiration) {
+		this.expiration = expiration;
+	}
 }
