@@ -36,16 +36,8 @@ public class SmsController {
 		String sender = (String) body.get("sender");
 		String destination = (String) body.get("destination");
 		String bodyMsg = (String) body.get("body");
-		Date expiration = null;
+		Date expiration = format.parse((String) body.get("expiration"));
 
-		if (body.containsKey("expiration")) {
-			expiration = format.parse((String) body.get("expiration"));
-
-			if (expiration.before(new Date())) {
-				throw new ValidationException("Data da mensagem expirada");
-			}
-		}
-		
 		smsService.sendSms(new Sms(sender, destination, bodyMsg, expiration));
 
 		return new ResponseEntity<String>("Sms sent", HttpStatus.OK);

@@ -1,5 +1,6 @@
 package com.m4u.service.sms.core;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +42,11 @@ public class SmsServiceImpl implements SmsService {
 
 	@Retryable(value = Exception.class, backoff = @Backoff(delay = 500, multiplier = 2), maxAttempts = 3)
 	public void sendSms(Sms sms) {
-		validateSms(sms);
+		if (!isValidSms(sms)) {
+			sms.setStatus(StatusSms.FAILED);
+			repository.save(sms);
+			throw new ValidationException("Sms inválido!");
+		}
 		
 		RestTemplate restTemplate = createRestTemplate();
 		
@@ -54,25 +59,32 @@ public class SmsServiceImpl implements SmsService {
 		requestMap.put("body", sms.getBody());
 
 		HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestMap, headers);
-
-		ResponseEntity<String> response = restTemplate.exchange(serviceUrl + "/api/v1", HttpMethod.PUT, request, String.class);
 		
-		if (response.getStatusCode().equals(HttpStatus.CREATED)) {
-			sms.setStatus(StatusSms.SENT);
-		} else {
+		try {
+			restTemplate.exchange(serviceUrl + "/api/v1", HttpMethod.PUT, request, String.class);
+		} catch(Exception e) {
 			sms.setStatus(StatusSms.FAILED);
+			repository.save(sms);
+			throw e;
 		}
-		
+
+		sms.setStatus(StatusSms.SENT);
 		repository.save(sms);
 	}
 	
-	private void validateSms(Sms sms) {
+	private boolean isValidSms(Sms sms) {
 		if (StringUtils.isBlank(sms.getFrom()) || StringUtils.isBlank(sms.getTo()) || StringUtils.isBlank(sms.getBody())) {
-			throw new ValidationException("Sms inválido!");
+			return false; 
+		} 
+
+		if (sms.getExpiration() != null && sms.getExpiration().before(new Date())) {
+			return false;
 		}
+
+		return true;
 	}
 	
-	public RestTemplate createRestTemplate() {
+	private RestTemplate createRestTemplate() {
 		RestTemplate template = new RestTemplate();
 		template.setErrorHandler(new RestTemplateErrorHandler());
 

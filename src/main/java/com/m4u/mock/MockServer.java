@@ -17,7 +17,7 @@ public class MockServer {
 				.withMethod("PUT")
 				.withPath("/api/v1"))
 		.respond(HttpResponse.response()
-				.withStatusCode(200));		
+				.withStatusCode(201));		
 	}
 
 }
