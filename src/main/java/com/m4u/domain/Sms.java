@@ -16,6 +16,8 @@ import com.m4u.domain.enums.StatusSms;
 @Entity
 public class Sms {
 	
+	public static final int MAX_BODY_LENGTH = 160;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -27,7 +29,7 @@ public class Sms {
 	@NotNull
 	private String to;
 	
-	@Column(length = 160)
+	@Column(length = MAX_BODY_LENGTH)
 	@NotNull
 	private String body;
 	

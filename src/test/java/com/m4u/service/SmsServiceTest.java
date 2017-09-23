@@ -85,5 +85,20 @@ public class SmsServiceTest {
 			throw ve;
 		}
 	}
+	
+	@Test(expected = ValidationException.class)
+	public void testSmsWithBodyTooBig() {
+		Sms sms = new Sms("Body", "to", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vel pretium odio, "
+				+ "eu elementum leo. Sed aliquam, mauris sit amet fringilla dapibus, felis quam semper amet.", new DateTime(2015, 10, 10, 0, 0).toDate());
+		
+		try {
+			smsService.sendSms(sms);
+		} catch (ValidationException ve) {
+			Assert.assertEquals("Sms inválido!", ve.getMessage());
+			sms.setStatus(StatusSms.FAILED);
+			Mockito.verify(repo).save(sms);
+			throw ve;
+		}
+	}
 
 }

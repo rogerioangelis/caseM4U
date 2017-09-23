@@ -80,6 +80,10 @@ public class SmsServiceImpl implements SmsService {
 		if (sms.getExpiration() != null && sms.getExpiration().before(new Date())) {
 			return false;
 		}
+		
+		if (sms.getBody().length() > Sms.MAX_BODY_LENGTH) {
+			return false;
+		}
 
 		return true;
 	}
