@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
+import com.m4u.domain.enums.StatusSms;
+
 @Entity
 public class Sms {
 	
@@ -27,6 +29,8 @@ public class Sms {
 	@NotNull
 	private String body;
 	
+	private StatusSms status;
+	
 	private Date expiration;
 
 	public Sms() {
@@ -39,14 +43,6 @@ public class Sms {
 		this.to = to;
 		this.body = body;
 		this.expiration = expiration;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getFrom() {
@@ -66,20 +62,12 @@ public class Sms {
 	public Date getExpiration() {
 		return expiration;
 	}
-
-	public void setFrom(String from) {
-		this.from = from;
+	
+	public StatusSms getStatus() {
+		return status;
 	}
 
-	public void setTo(String to) {
-		this.to = to;
-	}
-
-	public void setBody(String body) {
-		this.body = body;
-	}
-
-	public void setExpiration(Date expiration) {
-		this.expiration = expiration;
+	public void setStatus(StatusSms status) {
+		this.status = status;
 	}
 }
